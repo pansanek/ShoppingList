@@ -15,11 +15,9 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-//        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
-//        initViews()
-//        addTextChangeListeners()
-        launchRightMode()
-//        observeViewModel()
+        if(savedInstanceState == null){
+            launchRightMode()
+        }
     }
 
     private fun launchRightMode() {
@@ -29,7 +27,7 @@ class ShopItemActivity : AppCompatActivity() {
             else -> throw RuntimeException("Unknown screen mode $screenMode")
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.shop_item_containter, fragment)
+            .replace(R.id.shop_item_containter, fragment)
             .commit()
     }
 
