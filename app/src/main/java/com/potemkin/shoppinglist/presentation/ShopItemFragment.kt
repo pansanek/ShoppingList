@@ -16,29 +16,33 @@ import com.google.android.material.textfield.TextInputLayout
 import com.potemkin.shoppinglist.R
 import com.potemkin.shoppinglist.domain.ShopItem
 
-class ShopItemFragment(
-    private var screenMode: String = MODE_UNKNOWN,
-    private var shopItemId: Int = ShopItem.UNDEFINED_ID
-) : Fragment() {
+class ShopItemFragment: Fragment() {
     private lateinit var viewModel: ShopItemViewModel
+
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
     private lateinit var etName: EditText
     private lateinit var etCount: EditText
     private lateinit var buttonSave: Button
 
+    private var screenMode: String = MODE_UNKNOWN
+    private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        parseParams()
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         initViews(view)
         addTextChangeListeners()
@@ -116,11 +120,21 @@ class ShopItemFragment(
     }
 
     private fun parseParams() {
-        if (screenMode != MODE_EDIT && screenMode != MODE_ADD) {
-            throw java.lang.RuntimeException("Param screen mode is absent")
+        val args = requireArguments()
+        if(!args.containsKey(EXTRA_SCREEN_MODE))
+        {
+            throw RuntimeException("Param screen mode is absent")
         }
-        if (screenMode == MODE_EDIT && shopItemId == ShopItem.UNDEFINED_ID) {
-            throw java.lang.RuntimeException("Param shop item id is absent")
+        val mode = args.getString(EXTRA_SCREEN_MODE)
+        if (mode != MODE_EDIT && mode != MODE_ADD) {
+            throw RuntimeException("Unknown screen mode $mode")
+        }
+        screenMode = mode
+        if (screenMode == MODE_EDIT) {
+            if (!args.containsKey(EXTRA_SHOP_ITEM_ID)) {
+                throw RuntimeException("Param shop item id is absent")
+            }
+            shopItemId = args.getInt(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
         }
 
     }
@@ -140,25 +154,21 @@ class ShopItemFragment(
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
 
-        fun newIntentAddItem(context: Context): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
-            return intent
+        fun newInstanceAddItem(): ShopItemFragment {
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_SCREEN_MODE, MODE_ADD)
+                }
+            }
         }
 
-        fun newIntentEditItem(context: Context, shopItemId: Int): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
-            intent.putExtra(EXTRA_SHOP_ITEM_ID, shopItemId)
-            return intent
-        }
-
-        fun newInstanceAddItem():ShopItemFragment{
-            return ShopItemFragment(MODE_ADD)
-        }
-
-        fun newInstanceEditItem(shopItemId: Int):ShopItemFragment{
-            return ShopItemFragment(MODE_EDIT,shopItemId)
+        fun newInstanceEditItem(shopItemId: Int): ShopItemFragment {
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_SCREEN_MODE, MODE_ADD)
+                    putInt(EXTRA_SHOP_ITEM_ID, shopItemId)
+                }
+            }
         }
     }
 }
