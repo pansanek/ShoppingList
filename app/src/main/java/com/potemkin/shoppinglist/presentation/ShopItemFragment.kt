@@ -21,7 +21,6 @@ class ShopItemFragment(
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
 ) : Fragment() {
     private lateinit var viewModel: ShopItemViewModel
-
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
     private lateinit var etName: EditText
@@ -65,14 +64,14 @@ class ShopItemFragment(
             tilName.error = message
         }
         viewModel.canCloseScreen.observe(viewLifecycleOwner) {
-            //finish()
+            activity?.onBackPressed()
         }
     }
 
     private fun launchMode() {
         when (screenMode) {
             MODE_EDIT -> launchEditMode()
-            MODE_ADD -> launchAddMode()
+            MODE_ADD  -> launchAddMode()
         }
     }
 
@@ -117,7 +116,7 @@ class ShopItemFragment(
     }
 
     private fun parseParams() {
-        if(screenMode != MODE_EDIT && screenMode!=MODE_ADD){
+        if (screenMode != MODE_EDIT && screenMode != MODE_ADD) {
             throw java.lang.RuntimeException("Param screen mode is absent")
         }
         if (screenMode == MODE_EDIT && shopItemId == ShopItem.UNDEFINED_ID) {
@@ -126,7 +125,7 @@ class ShopItemFragment(
 
     }
 
-    private fun initViews(view:View) {
+    private fun initViews(view: View) {
         tilName = view.findViewById(R.id.til_name)
         tilCount = view.findViewById(R.id.til_count)
         etName = view.findViewById(R.id.et_name)
@@ -152,6 +151,14 @@ class ShopItemFragment(
             intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
             intent.putExtra(EXTRA_SHOP_ITEM_ID, shopItemId)
             return intent
+        }
+
+        fun newInstanceAddItem():ShopItemFragment{
+            return ShopItemFragment(MODE_ADD)
+        }
+
+        fun newInstanceEditItem(shopItemId: Int):ShopItemFragment{
+            return ShopItemFragment(MODE_EDIT,shopItemId)
         }
     }
 }
