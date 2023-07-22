@@ -18,6 +18,7 @@ import com.potemkin.shoppinglist.domain.ShopItem
 
 class ShopItemFragment: Fragment() {
     private lateinit var viewModel: ShopItemViewModel
+    private var onEditingFinishedListener: OnEditingFinishedListener?=null
 
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
@@ -50,6 +51,17 @@ class ShopItemFragment: Fragment() {
         observeViewModel()
     }
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context is OnEditingFinishedListener){
+            onEditingFinishedListener = context
+        }
+        else {
+            throw java.lang.RuntimeException("Actiity must implement onEditingFinishedListener")
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.errorInputCount.observe(viewLifecycleOwner) {
             val message = if (it) {
@@ -68,7 +80,7 @@ class ShopItemFragment: Fragment() {
             tilName.error = message
         }
         viewModel.canCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishedListener?.onEditingFininshed()
         }
     }
 
@@ -145,6 +157,10 @@ class ShopItemFragment: Fragment() {
         etName = view.findViewById(R.id.et_name)
         etCount = view.findViewById(R.id.et_count)
         buttonSave = view.findViewById(R.id.button)
+    }
+
+    interface OnEditingFinishedListener{
+                fun onEditingFininshed()
     }
 
     companion object {
