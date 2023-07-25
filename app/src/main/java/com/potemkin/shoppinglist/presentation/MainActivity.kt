@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListe
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
-    private lateinit var shopItemContainer: FragmentContainerView
+    private var shopItemContainer: FragmentContainerView?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
