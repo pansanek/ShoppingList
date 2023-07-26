@@ -2,10 +2,9 @@ package com.potemkin.shoppinglist.data
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.potemkin.shoppinglist.domain.ShopItem
 import com.potemkin.shoppinglist.domain.ShopListRepository
-import kotlin.random.Random
 
 class ShopListRepositoryImpl(application: Application) : ShopListRepository {
 
@@ -29,6 +28,8 @@ class ShopListRepositoryImpl(application: Application) : ShopListRepository {
         return mapper.mapDbModelToEntity(dbModel)
     }
 
-    override fun getShopList(): LiveData<List<ShopItem>> =shopListDao.getShopList()
+    override fun getShopList(): LiveData<List<ShopItem>> =  shopListDao.getShopList().map{
+        mapper.mapListDbModelToListEntity(it)
+    }
 
 }
