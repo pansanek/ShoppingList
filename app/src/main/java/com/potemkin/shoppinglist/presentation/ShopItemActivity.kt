@@ -7,30 +7,34 @@ import androidx.appcompat.app.AppCompatActivity
 import com.potemkin.shoppinglist.R
 import com.potemkin.shoppinglist.domain.ShopItem
 
-class ShopItemActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListener {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             launchRightMode()
         }
+    }
+
+    override fun onEditingFinished() {
+        finish()
     }
 
     private fun launchRightMode() {
         val fragment = when (screenMode) {
             MODE_EDIT -> ShopItemFragment.newInstanceEditItem(shopItemId)
-            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
-            else -> throw RuntimeException("Unknown screen mode $screenMode")
+            MODE_ADD  -> ShopItemFragment.newInstanceAddItem()
+            else      -> throw RuntimeException("Unknown screen mode $screenMode")
         }
         supportFragmentManager.beginTransaction()
             .replace(R.id.shop_item_containter, fragment)
             .commit()
     }
-
 
     private fun parseIntent() {
         if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
@@ -48,7 +52,6 @@ class ShopItemActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedL
             shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
         }
     }
-
 
     companion object {
 
@@ -70,9 +73,5 @@ class ShopItemActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedL
             intent.putExtra(EXTRA_SHOP_ITEM_ID, shopItemId)
             return intent
         }
-    }
-
-    override fun onEditingFininshed() {
-        finish()
     }
 }

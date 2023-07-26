@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.potemkin.shoppinglist.domain.ShopItem
 
-@Entity(tableName = "ShopItems")
+@Entity(tableName = "shop_items")
 data class ShopItemDBModel(
     @PrimaryKey(autoGenerate = true)
     val id :Int,
