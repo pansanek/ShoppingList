@@ -13,10 +13,10 @@ interface ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(MainViewModel::class)
-    fun bindMainViewModel(viewModel: MainViewModel):ViewModel
+    fun bindMainViewModel(viewModel: MainViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    fun bindShopItemViewModel(viewModel: ShopItemViewModel):ViewModel
+    @ViewModelKey(ShopItemViewModel::class)
+    fun bindShopItemViewModel(viewModel: ShopItemViewModel): ViewModel
 }

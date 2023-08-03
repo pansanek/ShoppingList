@@ -19,10 +19,12 @@ import dagger.Component.Factory
 interface ApplicationComponent {
 
     fun inject(activity: MainActivity)
+
     fun inject(fragment: ShopItemFragment)
 
-    @dagger.Component.Factory
+    @Component.Factory
     interface Factory {
+
         fun create(
             @BindsInstance application: Application
         ): ApplicationComponent
