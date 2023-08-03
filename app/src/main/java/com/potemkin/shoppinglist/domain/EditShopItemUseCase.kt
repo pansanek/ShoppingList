@@ -2,7 +2,7 @@ package com.potemkin.shoppinglist.domain
 
 import javax.inject.Inject
 
-class EditShopItemUseCase@Inject constructor(
+class EditShopItemUseCase @Inject constructor(
     private val shopListRepository: ShopListRepository
 ) {
     suspend fun editShopItem(shopItem: ShopItem){

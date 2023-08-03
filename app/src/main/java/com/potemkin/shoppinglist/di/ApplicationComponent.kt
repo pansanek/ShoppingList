@@ -3,6 +3,7 @@ package com.potemkin.shoppinglist.di
 import android.app.Activity
 import android.app.Application
 import android.provider.ContactsContract.Data
+import com.potemkin.shoppinglist.data.ShopListProvider
 import com.potemkin.shoppinglist.presentation.MainActivity
 import com.potemkin.shoppinglist.presentation.ShopItemFragment
 import dagger.BindsInstance
@@ -19,10 +20,14 @@ import dagger.Component.Factory
 interface ApplicationComponent {
 
     fun inject(activity: MainActivity)
+
     fun inject(fragment: ShopItemFragment)
 
-    @dagger.Component.Factory
+    fun inject(provider:ShopListProvider)
+
+    @Component.Factory
     interface Factory {
+
         fun create(
             @BindsInstance application: Application
         ): ApplicationComponent

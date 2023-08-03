@@ -14,16 +14,15 @@ interface DataModule {
 
     @ApplicationScope
     @Binds
-    fun bindShopListRepository(impl: ShopListRepositoryImpl):ShopListRepository
+    fun bindShopListRepository(impl: ShopListRepositoryImpl): ShopListRepository
 
-
-    companion object{
+    companion object {
 
         @ApplicationScope
         @Provides
         fun provideShopListDao(
             application: Application
-        ):ShopListDao{
+        ): ShopListDao {
             return AppDatabase.getInstance(application).shopListDao()
         }
     }
