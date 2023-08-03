@@ -6,6 +6,7 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
 import android.util.Log
+import com.potemkin.shoppinglist.domain.ShopItem
 import com.potemkin.shoppinglist.presentation.ShopApplication
 import javax.inject.Inject
 
@@ -16,6 +17,10 @@ class ShopListProvider: ContentProvider() {
     }
     @Inject
     lateinit var shopListDao: ShopListDao
+
+    @Inject
+    lateinit var mapper: ShopListMapper
+
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
         addURI("com.potemkin.shoppinglist","shop_items", GET_SHOP_ITEMS_QUERY)
     }
@@ -46,7 +51,20 @@ class ShopListProvider: ContentProvider() {
     }
 
     override fun insert(p0: Uri, p1: ContentValues?): Uri? {
-        TODO("Not yet implemented")
+        when(uriMatcher.match(p0)) {
+            GET_SHOP_ITEMS_QUERY -> {
+                if( p1 == null) return null
+                val id = p1.getAsInteger("id")
+                val name = p1.getAsString("name")
+                val count = p1.getAsInteger("count")
+                val enabled = p1.getAsBoolean("enabled")
+                val shopItem = ShopItem(
+                    name,count,enabled, id
+                )
+                shopListDao.addShopItemProvider(mapper.mapEntityToDbModel(shopItem))
+            }
+        }
+        return null
     }
 
     override fun delete(p0: Uri, p1: String?, p2: Array<out String>?): Int {

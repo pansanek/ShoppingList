@@ -20,6 +20,9 @@ interface ShopListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addShopItem(shopItemDBModel: ShopItemDBModel)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addShopItemProvider(shopItemDBModel: ShopItemDBModel)
+
     @Query("DELETE FROM shop_items WHERE id=:shopItemId")
     suspend fun deleteShopItem(shopItemId:Int)
 
